@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const graphqlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -63,10 +64,22 @@ app.use(
   })
 );
 
+// MongoDB connection
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${
+      process.env.MONGO_PASSWORD
+    }@heartofgold-fqnfx.mongodb.net/test?retryWrites=true`
+  )
+  .then(() => {
+    app.listen(3000);
+    console.log("listening on port 3k");
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
 // Route to make sure the app is on
 app.get("/", (req, res, next) => {
   res.send("Hello SPACE!");
 });
-
-app.listen(3000);
-console.log("listening on port 3k");
